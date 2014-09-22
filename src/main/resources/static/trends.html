@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--  <link rel="stylesheet" href="bubbles.css" />  -->
+<!-- <link rel="stylesheet" href="animate.css" /> -->
+<!-- <link rel="stylesheet" href="chat-bubbles.css" /> -->
+<style>
+	
+</style>
+<!--  jQuery  -->
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script>
+	$(function() {
+		console.log("ready!");
+		
+		var socket = new SockJS('/post');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/trend', function(greeting){
+            	
+            	console.log("Greeting is " + greeting.body);
+//            		console.log(JSON.parse(greeting.body).author);
+//            		console.log(JSON.parse(greeting.body).message);
+//            		var messageId = "message" + (new Date).getTime();
+//            		var image = "<img src='http://www.paddockspares.com/blog/wp-content/uploads/2011/09/about-blank-profile.jpg' class='img-circle'/>";
+//            		var html = image + "<div id='" + messageId + "' class='bubble bubble-alt'>" + JSON.parse(greeting.body).message + "</div><br/>";
+//            				//+ 
+//            				//"<div><p style='margin-left: 1em;'>" + JSON.parse(greeting.body).author + "</p><br/>";
+//    				console.log(html);
+//            		$("#container").append(html);
+//            		$('#' + messageId).addClass('animated zoomIn');
+                
+            });
+        });
+
+		$('#send').click(function(e) {
+			e.preventDefault();
+			$('#bubble').addClass('animated wobble');
+		});
+
+	});
+</script>
+
+<meta charset="UTF-8">
+<title>Bubbles everywhere!</title>
+</head>
+<body>
+	<div id="bubble" class="bubble">Hi
+		there. I like turtles.</div>
+	<p style="margin-left: 1em;">Ahmed Bhaila</p>
+	<button id="send" class="btn btn-primary">Send</button>
+	<div id="container">
+		<div class="bubble">
+			<p>I am a chat bubble</p>
+		</div>
+	</div>
+	
+</body>
+</html>
