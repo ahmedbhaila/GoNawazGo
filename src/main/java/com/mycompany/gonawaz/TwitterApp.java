@@ -58,7 +58,7 @@ public class TwitterApp implements CommandLineRunner {
 	void init() {
 		twitterStream().addListener(statusListener());
 		FilterQuery filterQuery = new FilterQuery();
-	    filterQuery.track(new String[]{"GoNawazGo"});
+	    filterQuery.track(new String[]{"iPhone"});
 	    twitterStream().filter(filterQuery);		
 	}
 	@Override

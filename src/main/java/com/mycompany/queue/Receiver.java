@@ -1,6 +1,10 @@
 package com.mycompany.queue;
 
 import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minidev.json.JSONArray;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +42,7 @@ public class Receiver {
     }
 	
 	private static String mapQuestAPI = "http://open.mapquestapi.com/geocoding/v1/address?" +
-									"key=Fmjtd%7Cluur2h07ll%2C2g%3Do5-9wb2lf&callback=renderGeocode&location=";
+									"key=Fmjtd|luur2h07ll,2g=o5-9wb2lf&location=";
 	
 	CSVWriter writer = null;
 	public Receiver(){
@@ -69,10 +73,23 @@ public class Receiver {
 		if(lat == null){
 			// look up lat lng based on location
 			String location = status.getUser().getLocation();
-			String response = restTemplate.getForObject(mapQuestAPI + location, String.class);
-			if(response != null){
-				JsonPath.read(response, "$..displayLatLng.lng");
-				JsonPath.read(response, "$.displayLatLng.lat");
+			if (location != null && !location.equals("")) {
+//				Map<String, String> params = new HashMap<String, String>();
+//				params.put("key", "Fmjtd%7Cluur2h07ll%2C2g%3Do5-9wb2lf");
+//				params.put("callback", "renderGeocode");
+//				params.put("location", location);
+//				restTemplate.getForObject(mapQuestAPI, responseType, urlVariables)
+				String response = restTemplate.getForObject(mapQuestAPI
+						+ location, String.class);
+				if (response != null) {
+					try{
+						lng = (Double)((JSONArray)JsonPath.read(response, "$..lng")).get(0);
+						lat = (Double)((JSONArray)JsonPath.read(response, "$..lat")).get(0);
+					}
+					catch(Exception e){
+						System.err.println(e.getMessage());
+					}
+				}
 			}
 		}
 		
@@ -80,6 +97,7 @@ public class Receiver {
 			geo = String.valueOf(lat) + "," + String.valueOf(lng);
 			try{
 				//stompController.greeting(geo);
+				template.convertAndSend("/topic/trend", geo);
 			}
 			catch(Exception e){
 				System.err.println(e.getMessage());
@@ -87,7 +105,7 @@ public class Receiver {
 	
 		}
 		//template.convertAndSend("/topic/trend", new Double[]{lat, lng});
-		template.convertAndSend("/topic/trend", geo);
+		
 		//return geo;
 	}
 
