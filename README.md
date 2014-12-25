@@ -1,7 +1,7 @@
 GoNawazGo
 =========
 
-A Tweet map showing whose tweeting #GoNawazGo around the world
+A Tweet map showing who is tweeting #GoNawazGo around the world
 
 If you are tweeting #GoNawazGo and you are that lucky 1%, I might be capturing your tweets and giving them a location on a google map. If you have enabled your location, I will use that to put that on the map. If you are using "other" fields to indicate your location I might not be capturing that yet :)
 
